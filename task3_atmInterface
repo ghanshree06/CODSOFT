@@ -1,0 +1,95 @@
+import java.util.Scanner;
+
+class BankAccount {
+    public double balance;
+    
+    public BankAccount(double openingBalance) {
+        this.balance = openingBalance;
+    }
+    
+    public void deposit(double amount) {
+        balance += amount;
+    }
+    
+    public void withdraw(double amount) {
+        if(amount > balance) {
+            System.out.println("Insufficient funds");
+        } else {
+            balance -= amount;
+        }
+    }
+    
+    public double getBalance() {
+        return balance; 
+    }
+}
+
+public class ATM {
+    
+    private BankAccount account;
+    private Scanner scanner;
+    
+    public ATM(BankAccount account) {
+        this.account = account; 
+        this.scanner = new Scanner(System.in);
+    }
+    
+    public void start() {
+        while(true) {
+            printOptions();
+            
+            int choice = scanner.nextInt();
+            
+            switch(choice) {
+            case 1: 
+                getBalance();
+                break;
+            case 2: 
+                withdrawFunds();
+                break;
+            case 3:
+                depositFunds();
+                break;
+            default: 
+                endSession();
+            }
+        }
+    }
+    
+    private void printOptions() {
+    	System.out.println("Enter the number of action you want to perform:  ");
+        System.out.println("1. Check Balance");
+        System.out.println("2. Withdraw Funds");
+        System.out.println("3. Deposit Funds");
+        System.out.println("4. End Session");
+    }
+    
+    private void getBalance() {
+        System.out.println("Your balance is: " + account.getBalance());
+    }
+    
+    private void withdrawFunds() {
+        System.out.print("Enter amount to withdraw: ");
+        double amount = scanner.nextDouble();
+        account.withdraw(amount);
+        System.out.println("New Balance : " + account.getBalance());
+    }
+    
+    private void depositFunds() {
+        System.out.print("Enter amount to deposit: ");
+        double amount = scanner.nextDouble();
+        account.deposit(amount);
+        System.out.println("New Balance : " + account.getBalance());
+    }
+    
+    private void endSession() {
+        System.out.println("Thank you for using this ATM");
+        System.exit(0);
+    }
+    
+    public static void main(String[] args) {
+        BankAccount account = new BankAccount(10000); 
+        ATM atm = new ATM(account);
+        atm.start();
+    }
+}
