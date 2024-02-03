@@ -1,0 +1,44 @@
+import java.util.Scanner;
+import java.text.DecimalFormat;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+
+
+public class currency_converter {
+
+	public static void main(String[] args) throws Exception {
+		        Scanner sc = new Scanner(System.in);
+		        DecimalFormat df = new DecimalFormat("#.##");
+
+		        System.out.print("Enter base currency: ");
+		        String base = sc.nextLine();
+
+		        System.out.print("Enter target currency: "); 
+		        String target = sc.nextLine();
+
+		        HttpClient client = HttpClient.newHttpClient();
+		        HttpRequest request = HttpRequest.newBuilder()
+		                .uri(new URI("https://api.exchangerate-api.com/v4/latest/" + base))
+		                .GET()
+		                .build();
+
+		        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+		        String body = response.body();
+
+		        int startIndex = body.indexOf(target) + target.length() + 3;
+		        int endIndex = body.indexOf(",", startIndex) - 1;
+		        String rateString = body.substring(startIndex, endIndex);
+		        double rate = Double.parseDouble(rateString);
+
+		        System.out.print("Enter amount: ");
+		        double amount = sc.nextDouble();
+
+		        double result = amount * rate;
+
+		        System.out.println(df.format(amount) + " " + base + " = " + df.format(result) + " " + target);
+
+		    }
+
+		}
